@@ -35,6 +35,19 @@ describe('website', () => {
     expect(await res.text()).toContain('<h1>Welcome</h1>');
   });
 
+  it('shows a welcome text and a link to the contact page on the home page', async () => {
+    const html = await (await fetch(`${base}/`)).text();
+    expect(html).toContain('<title>Home</title>');
+    expect(html).toContain('Use the contact page to send us a message.');
+    expect(html).toContain('<a class="button" href="/contact">Go to the contact page</a>');
+  });
+
+  it('makes the home page adapt to small screens', async () => {
+    const html = await (await fetch(`${base}/`)).text();
+    expect(html).toContain('<meta name="viewport" content="width=device-width, initial-scale=1">');
+    expect(html).toContain('@media (max-width: 480px)');
+  });
+
   it('shows the contact form', async () => {
     const res = await fetch(`${base}/contact`);
     const html = await res.text();
