@@ -1,2 +1,5 @@
-# Installed by the documentation link check (CLAUDE.md, Commands).
 node_modules/
+dist/
+# Messages saved by the contact form when running locally.
+data/
+.env
