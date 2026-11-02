@@ -14,6 +14,16 @@ function layout(title: string, body: string): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)}</title>
+<style>
+body { font-family: system-ui, sans-serif; line-height: 1.5; margin: 0; padding: 1rem; color: #222; }
+nav, main { max-width: 40rem; margin: 0 auto; }
+nav { padding-bottom: 0.5rem; }
+h1 { font-size: 2rem; }
+input, textarea { width: 100%; box-sizing: border-box; font: inherit; }
+textarea { min-height: 8rem; }
+.button { display: inline-block; padding: 0.75rem 1.25rem; background: #0b5cad; color: #fff; border-radius: 0.25rem; text-decoration: none; }
+@media (max-width: 480px) { h1 { font-size: 1.5rem; } .button { display: block; text-align: center; } }
+</style>
 </head>
 <body>
 <nav><a href="/">Home</a> | <a href="/contact">Contact</a></nav>
@@ -28,7 +38,7 @@ ${body}
 export function homePage(): string {
   return layout(
     'Home',
-    '<h1>Welcome</h1>\n<p>This is a simple website. Use the contact page to send us a message.</p>',
+    '<h1>Welcome</h1>\n<p>This is a simple website. Use the contact page to send us a message.</p>\n<p><a class="button" href="/contact">Go to the contact page</a></p>',
   );
 }
 
