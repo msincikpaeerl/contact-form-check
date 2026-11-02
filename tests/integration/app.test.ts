@@ -50,7 +50,10 @@ describe('website', () => {
 
   it('shows the contact form', async () => {
     const res = await fetch(`${base}/contact`);
-    expect(await res.text()).toContain('<form method="post" action="/contact">');
+    const html = await res.text();
+    expect(html).toContain('<form method="post" action="/contact" novalidate>');
+    for (const name of ['name', 'email', 'message']) expect(html).toContain(`name="${name}"`);
+    expect(html).toContain('<button type="submit">Send</button>');
   });
 
   it('saves a valid submission to the file', async () => {
@@ -69,5 +72,23 @@ describe('website', () => {
     const res = await post({ name: '', email: 'bad', message: '' });
     expect(res.status).toBe(400);
     await expect(readFile(file, 'utf8')).rejects.toThrow();
+  });
+
+  it('shows the error next to the field and keeps what was typed', async () => {
+    const res = await post({ name: 'Ann', email: 'bad', message: 'Hello' });
+    const html = await res.text();
+    expect(html).toContain('id="email-error"');
+    expect(html).toContain('Please enter a valid e-mail address.');
+    expect(html).not.toContain('id="name-error"');
+    expect(html).toContain('value="Ann"');
+    expect(html).toContain('value="bad"');
+    expect(html).toContain('>Hello</textarea>');
+  });
+
+  it('keeps two messages sent one after the other', async () => {
+    await post({ name: 'Ann', email: 'ann@example.com', message: 'One' });
+    await post({ name: 'Bob', email: 'bob@example.com', message: 'Two' });
+    const lines = (await readFile(file, 'utf8')).trim().split('\n');
+    expect(lines.map((l) => JSON.parse(l).message)).toEqual(['One', 'Two']);
   });
 });

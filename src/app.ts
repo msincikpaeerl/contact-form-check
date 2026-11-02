@@ -28,7 +28,7 @@ export function createApp(options: AppOptions): express.Express {
         res
           .status(400)
           .type('html')
-          .send(contactPage(result.errors, req.body ?? {}));
+          .send(contactPage(result.errors, typeof req.body === 'object' ? (req.body ?? {}) : {}));
         return;
       }
       await saveMessage(options.messagesFile, {

@@ -29,11 +29,22 @@ The page adapts to the screen: on a phone the text and the button fit the narrow
 
 1. Click **Contact**.
 2. Fill in your name, e-mail and message, then click **Send**.
-3. A page confirms that your message was saved. If something is missing, the form shows what to fix.
+3. A page confirms that your message was saved ("Your message was saved."). If a field is empty or the e-mail address is not valid, the form shows a message next to that field, keeps what you typed, and saves nothing.
 
 ## Find the saved messages
 
-Messages are saved in the file `data/messages.jsonl` inside the project folder, one message per line, with the name, e-mail, message and the time it was received. Open it with any text editor.
+Messages are saved in the file `data/messages.jsonl` inside the project folder, on the computer running the site. The folder is created when the first message arrives, so it does not exist before that.
+
+Each message is one line, and new messages are added at the end, so earlier ones are never lost. A line looks like this:
+
+```
+{"name":"Ann","email":"ann@example.com","message":"Hello","receivedAt":"2026-11-03T10:15:00.000Z"}
+```
+
+- `name`, `email` and `message` are what the visitor typed.
+- `receivedAt` is the date and time the message was received (UTC).
+
+To read the messages, open the file with any text editor (Notepad, TextEdit…). The folder is ignored by Git, so messages are never published with the code. If you set `MESSAGES_FILE` (see below), look in that file instead.
 
 ## Options
 

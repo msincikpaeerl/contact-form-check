@@ -14,5 +14,5 @@ Test strategy and how to run each level. Tools are chosen in [ADR 0004](../adr/0
 
 - Unit tests cover pure logic (for example form validation).
 - Integration tests start the real Express app on a free port with a temporary messages file, send requests with `fetch`, and check both the response and the saved file. Use `createApp({ messagesFile })` and delete the temporary folder afterwards.
-- There are no browser tests: the site has no client-side JavaScript. Add them (Playwright) in the ticket that introduces browser behaviour.
+- Browser tests (Playwright, `tests/e2e`) run with `npm run test:e2e`. Playwright builds and starts the site itself on port 3100 with a temporary messages file. The first time, install the browser with `npx playwright install chromium`. CI runs them in the `e2e` job. They are not part of `npm test`.
 - A bug fix starts with a test that fails before the fix.
