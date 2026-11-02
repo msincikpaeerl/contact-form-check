@@ -15,6 +15,16 @@ How to run contact-form-check on your computer.
 
 Stop the site with Ctrl+C in the terminal.
 
+## The home page
+
+The home page is what you see when you open the site's address. It shows:
+
+- a title, **Welcome**, and a short text presenting the site;
+- a blue button, **Go to the contact page**, that leads to the contact form (the **Contact** link at the top of every page does the same);
+- the **Home** and **Contact** links at the top, to move between pages.
+
+The page adapts to the screen: on a phone the text and the button fit the narrow screen, and on a desktop computer the content is centred and easy to read.
+
 ## Send a message
 
 1. Click **Contact**.
