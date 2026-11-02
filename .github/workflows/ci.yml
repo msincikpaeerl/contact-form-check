@@ -42,11 +42,31 @@ jobs:
       - name: Check documentation links
         run: npm run docs:links
 
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 24.21.0
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        run: npm run test:e2e
+
   # Branch protection requires this job only, by its name: never rename or remove it. List every
   # other job in its needs; it fails when any of them failed, was cancelled or was skipped.
   ci:
     if: always()
-    needs: [checks]
+    needs: [checks, e2e]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

@@ -3,3 +3,5 @@ dist/
 # Messages saved by the contact form when running locally.
 data/
 .env
+test-results/
+playwright-report/

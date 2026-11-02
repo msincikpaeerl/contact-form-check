@@ -4,7 +4,11 @@ export interface ContactInput {
   message: string;
 }
 
-export type ValidationResult = { ok: true; value: ContactInput } | { ok: false; errors: string[] };
+/** One error message per field that is wrong. */
+export type FieldErrors = Partial<Record<keyof ContactInput, string>>;
+
+export type ValidationResult =
+  { ok: true; value: ContactInput } | { ok: false; errors: FieldErrors };
 
 function field(body: unknown, key: string): string {
   if (typeof body !== 'object' || body === null) return '';
@@ -19,11 +23,13 @@ export function validateContact(body: unknown): ValidationResult {
     email: field(body, 'email'),
     message: field(body, 'message'),
   };
-  const errors: string[] = [];
-  if (!value.name) errors.push('Please enter your name.');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
-    errors.push('Please enter a valid e-mail address.');
+  const errors: FieldErrors = {};
+  if (!value.name) errors.name = 'Please enter your name.';
+  if (!value.email) {
+    errors.email = 'Please enter your e-mail address.';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
+    errors.email = 'Please enter a valid e-mail address.';
   }
-  if (!value.message) errors.push('Please enter a message.');
-  return errors.length > 0 ? { ok: false, errors } : { ok: true, value };
+  if (!value.message) errors.message = 'Please enter a message.';
+  return Object.keys(errors).length > 0 ? { ok: false, errors } : { ok: true, value };
 }

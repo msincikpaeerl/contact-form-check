@@ -13,7 +13,15 @@ describe('validateContact', () => {
   it('rejects missing fields and bad e-mail', () => {
     const result = validateContact({ email: 'nope' });
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.errors).toHaveLength(3);
+    if (!result.ok) {
+      expect(Object.keys(result.errors).sort()).toEqual(['email', 'message', 'name']);
+      expect(result.errors.email).toBe('Please enter a valid e-mail address.');
+    }
+  });
+
+  it('asks for the e-mail when it is empty', () => {
+    const result = validateContact({ name: 'A', email: '', message: 'B' });
+    expect(result).toEqual({ ok: false, errors: { email: 'Please enter your e-mail address.' } });
   });
 
   it('rejects a body that is not an object', () => {

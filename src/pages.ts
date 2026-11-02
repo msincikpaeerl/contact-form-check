@@ -1,3 +1,5 @@
+import type { FieldErrors } from './validation.js';
+
 export function escapeHtml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
@@ -32,22 +34,26 @@ export function homePage(): string {
   );
 }
 
+function fieldError(id: string, errors: FieldErrors, key: keyof FieldErrors): string {
+  const text = errors[key];
+  return text
+    ? `<br><span class="error" id="${id}-error" role="alert">${escapeHtml(text)}</span>`
+    : '';
+}
+
 export function contactPage(
-  errors: string[] = [],
+  errors: FieldErrors = {},
   values: { name?: string; email?: string; message?: string } = {},
 ): string {
-  const errorList =
-    errors.length > 0
-      ? `<ul class="errors">${errors.map((e) => `<li>${escapeHtml(e)}</li>`).join('')}</ul>`
-      : '';
+  const invalid = (key: keyof FieldErrors): string =>
+    errors[key] ? ` aria-invalid="true" aria-describedby="${key}-error"` : '';
   return layout(
     'Contact',
     `<h1>Contact</h1>
-${errorList}
-<form method="post" action="/contact">
-<p><label>Name <input name="name" value="${escapeHtml(values.name ?? '')}" required></label></p>
-<p><label>E-mail <input name="email" type="email" value="${escapeHtml(values.email ?? '')}" required></label></p>
-<p><label>Message <textarea name="message" required>${escapeHtml(values.message ?? '')}</textarea></label></p>
+<form method="post" action="/contact" novalidate>
+<p><label>Name <input name="name" value="${escapeHtml(values.name ?? '')}"${invalid('name')}></label>${fieldError('name', errors, 'name')}</p>
+<p><label>E-mail <input name="email" type="email" value="${escapeHtml(values.email ?? '')}"${invalid('email')}></label>${fieldError('email', errors, 'email')}</p>
+<p><label>Message <textarea name="message"${invalid('message')}>${escapeHtml(values.message ?? '')}</textarea></label>${fieldError('message', errors, 'message')}</p>
 <p><button type="submit">Send</button></p>
 </form>`,
   );
